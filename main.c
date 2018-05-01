@@ -325,6 +325,30 @@ int main(int argc, char **argv) {
 
     printf("[main] Inserted %d keys in %f seconds\n", NUM_KEYS, end - start);
     printf("[main] Delta between 2 approaches is %f seconds\n", NUM_KEYS, timing2 - timing1);
+    printf("[main] OK, lets see if we lost anyting:\n");
+
+    // Reset the thread array
+    memset(threads, 0, sizeof(pthread_t)*num_threads);
+
+    // TODO: Move into separate function
+    // Retrieve keys in parallel
+    start = now();
+    for (i = 0; i < num_threads; i++) {
+        // Part 3. Now we are ready to call pa rallel retrieval of keys in parallel:
+        pthread_create(&threads[i], NULL, parallel_get_phase, (void *)i);
+        // Please note: if there is not enough cores available - it would actually
+        // SLOW DOWN execution, not speed up, because thread management adds overhead.
+    }
+
+    // Collect count of lost keys again
+    total_lost = 0;
+    *lost_keys = (long *) malloc(sizeof(long) * num_threads);
+    for (i = 0; i < num_threads; i++) {
+        pthread_join(threads[i], (void **)&lost_keys[i]);
+        total_lost += lost_keys[i];
+    }
+    end = now();
+
 
     return 0;
 
