@@ -8,7 +8,7 @@
 #include <unistd.h>
 
 #define NUM_BUCKETS 5     // Buckets in hash table
-#define NUM_KEYS 100000  // Number of keys inserted per thread=
+#define NUM_KEYS 1000  // Number of keys inserted per thread=
 // #define VERBOSE TRUE  // Comment out to disable verbose output (shall be disabled for timing!)
 
 typedef struct _bucket_entry {
